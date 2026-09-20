@@ -1,0 +1,20 @@
+export const hash = (s: string) => { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return Math.abs(h >>> 0); };
+export const pad = (n: number) => String(n).padStart(2, '0');
+export const iso = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+export const today = () => iso(new Date());
+export const parse = (s: string) => { const [y, m, d] = s.slice(0, 10).split('-').map(Number); return new Date(y, m - 1, d); };
+export const addDays = (s: string, n: number) => { const d = parse(s); d.setDate(d.getDate() + n); return iso(d); };
+export const diffDays = (a: string, b: string) => Math.round((parse(b).getTime() - parse(a).getTime()) / 86400000);
+const MON = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const DOW = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+export const fmtDate = (s: string) => { const d = parse(s); return `${d.getDate()} ${MON[d.getMonth()]}`; };
+export const fmtLong = (s: string) => { const d = parse(s); return `${DOW[d.getDay()]}, ${d.getDate()} ${MON[d.getMonth()]} ${d.getFullYear()}`; };
+export const dow = (s: string) => DOW[parse(s).getDay()];
+export const fmtRange = (a: string, b: string) => `${fmtDate(a)} – ${fmtDate(b)}`;
+export const uid = (p: string) => `${p}-${Date.now().toString(36)}${Math.floor(Math.random() * 1e6).toString(36)}`;
+export const code = () => `FIO-${100000 + Math.floor(Math.random() * 899999)}`;
+export const km = (a: [number, number], b: [number, number]) => {
+  const R = 6371, r = Math.PI / 180, dLat = (b[0] - a[0]) * r, dLng = (b[1] - a[1]) * r;
+  const x = Math.sin(dLat / 2) ** 2 + Math.cos(a[0] * r) * Math.cos(b[0] * r) * Math.sin(dLng / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(x));
+};
